@@ -32,7 +32,7 @@ class UpdateRequest extends FormRequest
                 'bail',
                 'required',
                 'string',
-                Rule::unique('users')->ignore($user->id);
+//                Rule::unique('users')->ignore($user->id)
             ],
         ];
     }
