@@ -11,18 +11,24 @@ use App\Http\Requests\StoreCourseRequest;
 use App\Http\Requests\UpdateCourseRequest;
 use App\Http\Requests\DestroyCourseRequest;
 
-
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
-use     Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 use Yajra\DataTables\DataTables;
 
 
 class CourseController extends Controller
 {
-    private string $title = 'Course';
+    private Builder $model;
     public function __construct()
     {
-     View::share('title',$this->title);
+        $this->model = (new  Course())->query();
+        $routerName = Route::currentRouteName();
+        $arr = explode('.', $routerName);
+        $arr = array_map('ucfirst',$arr);
+        $title = implode(' - ',$arr);
+        View::share('title',$title);
     }
 
 
@@ -32,7 +38,8 @@ class CourseController extends Controller
     }
     public function api()
     {
-        return DataTables::of(Course::query())
+
+        return DataTables::of($this->model)
             ->editColumn('created_at',function ($object){
                 return $object->year_created_at;
             })
@@ -47,6 +54,15 @@ class CourseController extends Controller
             ->rawColumns(['edit'])
             ->make(true);
     }
+    public function apiName(Request $request)
+    {
+        return $this->model
+            ->where('name', 'like','%'.$request->get('q').'%' )
+            ->get([
+            'id',
+            'name',
+        ]);
+    }
 
     public function create()
     {
@@ -59,7 +75,7 @@ class CourseController extends Controller
 //        $object->fill($request->validated());
 //        $object->save();
 
-        Course::create($request->validated());
+        $this->model->create($request->validated());
 
         return redirect()->route('courses.index');
     }
@@ -77,30 +93,33 @@ class CourseController extends Controller
     }
 
 
-    public function update(UpdateRequest $request, Course $course)
+    public function update(UpdateRequest $request, $courseId)
     {
-        $course->update(
-            $request->except([
-                '_token',
-                '_method',
-            ])
-        );
-
+//        $course->update(
+//            $request->except([
+//                '_token',
+//                '_method',
+//            ])
+//        );
+        $object = $this->model->find($courseId);
+        $object->fill($request->validated());
+        $object->save();
 
         return redirect()->route('courses.index');
     }
 
 
-    public function destroy(DestroyRequest $request, $course)
+    public function destroy(Request $request,  $courseId)
     {
+        $this->model->find($courseId)->delete();
+        $this->model->where('id',$courseId)->delete();
 
-        Course::destroy($course);
+        $arr['status'] = true;
+        $arr['message'] = '';
 
-//        $arr['status'] = true;
-//        $arr['message'] = '';
+        return response($arr, status: 200);
 
-//        return response($arr, status: 200);
-        return redirect()->route('course.index');
+        return redirect()->route('courses.index');
 
     }
 }

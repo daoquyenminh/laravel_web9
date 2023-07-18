@@ -11,6 +11,7 @@ class Course extends Model
     protected $fillable = [
         'name',
     ];
+
     public function getYearCreatedAtAttribute(){
         return $this->created_at->format('Y');
     }

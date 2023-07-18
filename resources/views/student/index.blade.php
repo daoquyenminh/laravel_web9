@@ -6,18 +6,16 @@
 
 @section('content')
 
-    <a  href="{{route('courses.create')}}">
+    <a  href="{{route('students.create')}}">
         <button class="btn btn-success">Thêm dữ liệu</button>
     </a>
-    <div class="form-group">
-        <select id="select-name" class="col-12"></select>
-    </div>
+
     <table border="1" width="100%" class="table table-striped table-bordered" name="table-index" id="table-index" >
         <thead>
         <tr>
             <th>#</th>
             <th>Name</th>
-            <th>Created at</th>
+            <th>Age</th>
             <th>Sửa</th>
             <th>Delete</th>
         </tr>
@@ -32,31 +30,6 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script>
         $(function () {
-            $("#select-name").select2({
-                ajax: {
-                    url: "{{route('courses.api.name')}}",
-                    dataType: 'json',
-                    data: function (params) {
-                    return {
-                        q: params.term,// search term
-                        page: params.page
-                    };
-                    },
-                    processResults: function (data, params) {
-
-                        return {
-                            result: $.map(data,function (item){
-                                return {
-                                    text:item.tag_value,
-                                    id:item.tag_id
-                                }
-                            })
-                        };
-                    },
-                    // cache: true
-                },
-                placeholder: 'Search for a name'
-                });
 
 ////////////////
 
@@ -90,14 +63,14 @@
                 ],
                 processing: true,
                 serverSide: true,
-                ajax: '{!! route('courses.api')!!}',
+                ajax: '{!! route('students.api')!!}',
                 columnDefs: [
                     {className : "not-export","target":[ 3 ]}
                 ],
                 columns: [
                     { data: 'id', name: 'id' },
                     { data: 'name', name: 'name' },
-                    { data: 'created_at', name: 'created_at' },
+                    { data: 'age', name: 'age' },
                     {
                         data: 'edit',
                         target: 3,
@@ -123,12 +96,8 @@
                 ]
             });
 
-            var table = $('#example').DataTable();
 
-            // #myInput is a <input type="text"> element
-            $('#select-name').onChange( function () {
-                table.column(0).search(this.value ).draw();
-            } );
+
 
 
             $(document).on('click','.btn-delete', function (){
