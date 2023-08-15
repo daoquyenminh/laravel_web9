@@ -15,7 +15,10 @@
         <tr>
             <th>#</th>
             <th>Name</th>
+            <th>Gender</th>
             <th>Age</th>
+            <th>Status</th>
+            <th>Course Name</th>
             <th>Sửa</th>
             <th>Delete</th>
         </tr>
@@ -70,7 +73,10 @@
                 columns: [
                     { data: 'id', name: 'id' },
                     { data: 'name', name: 'name' },
+                    { data: 'gender', name: 'gender' },
                     { data: 'age', name: 'age' },
+                    { data: 'status', name: 'status' },
+                    { data: 'course_name', name: 'course_name' },
                     {
                         data: 'edit',
                         target: 3,

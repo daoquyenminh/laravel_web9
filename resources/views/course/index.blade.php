@@ -17,6 +17,7 @@
         <tr>
             <th>#</th>
             <th>Name</th>
+            <th>Number Students</th>
             <th>Created at</th>
             <th>Sửa</th>
             <th>Delete</th>
@@ -97,6 +98,7 @@
                 columns: [
                     { data: 'id', name: 'id' },
                     { data: 'name', name: 'name' },
+                    { data: 'students_count', name: 'number_students' },
                     { data: 'created_at', name: 'created_at' },
                     {
                         data: 'edit',

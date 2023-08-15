@@ -10,10 +10,20 @@ class Student extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'birhdate',
-        'status'
+        'birthdate',
+        'birthdate',
+        'status',
+        'course_id',
     ];
-    public function getAgeAttribute(){
+    public function getAgeAttribute():int
+    {
         return date_diff(date_create($this->birthdate),date_create())->y;
+    }
+    public function getGenderNameAttribute():string
+    {
+        return ($this->gender===0) ? "Male" : "Female";
+    }
+    public function course(){
+        return $this->belongsTo(Course::class,'course_id','id');
     }
 }
